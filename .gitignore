@@ -1,0 +1,13 @@
+.DS_Store
+Thumbs.db
+*.log
+
+# Do not redistribute raw or processed dataset files.
+project_1_cardiovascular_disease/01_data/raw/*.csv
+project_1_cardiovascular_disease/01_data/processed/*.csv
+project_1_cardiovascular_disease/04_outputs/tables/*.csv
+
+# Keep generated reports and local notebook checkpoints out of the public repo.
+*.docx
+*.pdf
+.ipynb_checkpoints/

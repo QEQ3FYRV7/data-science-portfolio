@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Project page for a cardiovascular disease prediction data science project using logistic regression and a public dataset."
+    />
+    <title>Cardiovascular Disease Prediction | Zuby</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../../styles.css" />
+  </head>
+  <body class="project-page" data-theme="dark">
+    <header class="site-header">
+      <a class="brand" href="../../index.html#home" aria-label="Back to portfolio home">
+        <span class="brand-mark">Z</span>
+      </a>
+
+      <div class="top-actions">
+        <div class="top-links" aria-label="Professional links">
+          <a href="mailto:zuby.uche16@gmail.com">Mail</a>
+          <a href="https://github.com/zubyQEQ3FYRV7">GitHub</a>
+        </div>
+        <button class="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false">
+          <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="M9 21h6" />
+            <path d="M10 17h4" />
+            <path d="M8.2 14.5a6.2 6.2 0 1 1 7.6 0c-.86.67-1.3 1.38-1.42 2.5H9.62c-.12-1.12-.56-1.83-1.42-2.5Z" />
+            <path d="M12 3V1.5" />
+            <path d="m4.75 5.25-1-1" />
+            <path d="M19.25 5.25l1-1" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="project-main">
+      <section class="project-page-hero" id="project-top">
+        <div class="section-inner project-hero-grid">
+          <div class="project-hero-copy">
+            <a class="breadcrumb-link" href="../../index.html#projects">Back to portfolio</a>
+            <p class="eyebrow">Project 1</p>
+            <h1>Cardiovascular Disease Prediction</h1>
+            <p class="role">Data science project</p>
+            <p class="project-lede">
+              A logistic regression project using routine health indicators to predict whether
+              cardiovascular disease is recorded in a public dataset. The checker is included as a
+              communication prototype, while the main project remains the data science workflow.
+            </p>
+            <div class="tag-row" aria-label="Project descriptors">
+              <span>Public dataset</span>
+              <span>Logistic regression</span>
+              <span>EDA</span>
+              <span>Model evaluation</span>
+              <span>Interactive prototype</span>
+            </div>
+            <div class="card-actions">
+              <a class="button button-primary" href="#results">View Results</a>
+              <a class="button button-secondary" href="../cardiovascular-risk-checker/index.html">Open Risk Checker</a>
+            </div>
+          </div>
+
+          <aside class="project-stat-panel" aria-label="Project highlights">
+            <div>
+              <span class="stat-value">68,650</span>
+              <span class="stat-label">cleaned records</span>
+            </div>
+            <div>
+              <span class="stat-value">81.6%</span>
+              <span class="stat-label">recall at selected threshold</span>
+            </div>
+            <div>
+              <span class="stat-value">0.795</span>
+              <span class="stat-label">ROC-AUC</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <nav class="project-jump-nav" aria-label="Project page sections">
+        <div class="section-inner">
+          <a class="project-back-nav" href="../../index.html#projects">Back to portfolio</a>
+          <a href="#overview">Overview</a>
+          <a href="#data-source">Data Source</a>
+          <a href="#workflow">Workflow</a>
+          <a href="#data-engineering">Data Engineering</a>
+          <a href="#eda">EDA</a>
+          <a href="#results">Results</a>
+          <a href="#recommendations">Recommendations</a>
+        </div>
+      </nav>
+
+      <section class="project-narrative-section" id="project-content">
+        <div class="section-inner project-story-flow">
+          <article class="story-panel story-panel-wide" id="overview">
+            <p class="eyebrow">Project Overview</p>
+            <h2>Predicting cardiovascular disease from routine health indicators.</h2>
+            <p>
+              The project investigates whether age, blood pressure, cholesterol, glucose, BMI and
+              lifestyle indicators can support an interpretable cardiovascular disease prediction
+              model. The work is designed as a risk awareness and communication exercise, not a
+              clinical decision system.
+            </p>
+            <p>
+              The aim is not simply to show a model score. The project follows the full data science
+              workflow: inspect the public dataset, clean unrealistic values, explore health patterns,
+              train an interpretable model, evaluate the model using classification metrics, and then
+              translate the result into a simple checker that a non-technical user can understand.
+            </p>
+          </article>
+
+          <article class="story-panel" id="data-source">
+            <h3>Data Source</h3>
+            <p>
+              The dataset is the Kaggle Cardiovascular Disease Dataset. It contains 70,000 records
+              and a binary target showing whether cardiovascular disease is present in the record.
+              The raw dataset is accessible through Kaggle and linked below. It is not redistributed
+              from this portfolio because the dataset page lists the licence as unknown.
+            </p>
+            <a
+              class="text-link"
+              href="https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset"
+            >View Kaggle source</a>
+          </article>
+
+          <article class="story-panel story-panel-wide" id="workflow">
+            <h3>Project Workflow</h3>
+            <p>
+              The architecture diagram shows the route from the public dataset to the final user-facing
+              prototype. It separates the analytical work from the communication layer, which matters
+              because the checker is only an output of the model, not the whole project.
+            </p>
+            <figure class="figure-card figure-card-wide">
+              <img
+                src="../../assets/project-1/cardio_project_architecture_diagram.png"
+                alt="Architecture diagram showing the cardiovascular project workflow from data source to model evaluation and checker output"
+              />
+              <figcaption>Workflow from public data source through cleaning, EDA, modelling, evaluation and checker output.</figcaption>
+            </figure>
+          </article>
+
+          <article class="story-panel" id="data-engineering">
+            <h3>Data Engineering</h3>
+            <p>
+              The workflow inspected the raw file, removed invalid clinical measurements, converted
+              age into years, calculated BMI and blood pressure features, and created interpretable
+              bands for analysis and modelling.
+            </p>
+            <p>
+              The cleaned dataset retained 68,650 records. The cleaning rules removed impossible
+              values, such as invalid blood pressure relationships, but kept medically possible
+              high-risk values so the model did not lose the profiles it needed to learn from.
+            </p>
+          </article>
+
+          <article class="story-panel story-panel-wide" id="eda">
+            <h3>EDA And Visualisation</h3>
+            <p>
+              EDA examined target balance and cardiovascular disease rates across age, blood pressure,
+              BMI, cholesterol and glucose groups. The selected visuals below show the clearest
+              patterns used to shape the modelling and checker explanation.
+            </p>
+            <div class="figure-grid">
+              <figure class="figure-card">
+                <img
+                  src="../../assets/project-1/eda_02_rate_by_age_band.png"
+                  alt="Chart showing cardiovascular disease rate by age band"
+                />
+                <figcaption>Older age bands showed higher observed cardiovascular disease rates.</figcaption>
+              </figure>
+              <figure class="figure-card">
+                <img
+                  src="../../assets/project-1/eda_03_rate_by_systolic_bp_category.png"
+                  alt="Chart showing cardiovascular disease rate by systolic blood pressure category"
+                />
+                <figcaption>Systolic blood pressure categories showed one of the clearest risk patterns.</figcaption>
+              </figure>
+              <figure class="figure-card">
+                <img
+                  src="../../assets/project-1/eda_05_rate_by_bmi_category.png"
+                  alt="Chart showing cardiovascular disease rate by BMI category"
+                />
+                <figcaption>BMI was useful for explanation, but it was interpreted alongside other indicators.</figcaption>
+              </figure>
+              <figure class="figure-card">
+                <img
+                  src="../../assets/project-1/eda_06_rate_by_cholesterol.png"
+                  alt="Chart showing cardiovascular disease rate by cholesterol group"
+                />
+                <figcaption>Cholesterol groups added a clear clinical pattern to the exploratory analysis.</figcaption>
+              </figure>
+            </div>
+            <div class="risk-legend" aria-label="Observed risk colour scale">
+              <strong>Observed risk level</strong>
+              <span><i style="--risk-colour: #69b981"></i>Low</span>
+              <span><i style="--risk-colour: #a6d96a"></i>Moderate low</span>
+              <span><i style="--risk-colour: #ffd34d"></i>Moderate</span>
+              <span><i style="--risk-colour: #ff8a2a"></i>High</span>
+              <span><i style="--risk-colour: #ef4444"></i>Very high</span>
+            </div>
+          </article>
+
+          <article class="story-panel story-panel-wide" id="results">
+            <h3>Modelling And Results</h3>
+            <p>
+              Logistic regression was selected because the outcome is binary and the model produces
+              an interpretable probability. Final test results were 70.5% accuracy, 66.4% precision,
+              81.6% recall, 73.2% F1 score and 0.795 ROC-AUC.
+            </p>
+            <p>
+              Recall was prioritised because the prototype is framed as risk awareness support.
+              In that setting, missing a record that shows cardiovascular disease is treated
+              as a more serious error than flagging an additional record for caution.
+            </p>
+            <p>
+              The Kaggle dataset has not been clinically validated for UK populations, so the results
+              show predictive performance within this dataset rather than clinical proof or a
+              deployable health risk model.
+            </p>
+            <div class="metric-grid">
+              <div><strong>70.5%</strong><span>Accuracy</span></div>
+              <div><strong>66.4%</strong><span>Precision</span></div>
+              <div><strong>81.6%</strong><span>Recall</span></div>
+              <div><strong>73.2%</strong><span>F1 score</span></div>
+              <div><strong>0.795</strong><span>ROC-AUC</span></div>
+            </div>
+            <div class="figure-grid">
+              <figure class="figure-card">
+                <img
+                  src="../../assets/project-1/model_02_confusion_matrix_test.png"
+                  alt="Confusion matrix for the cardiovascular logistic regression model"
+                />
+                <figcaption>The confusion matrix shows the balance between missed positives and false flags.</figcaption>
+              </figure>
+              <figure class="figure-card">
+                <img
+                  src="../../assets/project-1/model_03_roc_curve_test.png"
+                  alt="ROC curve for the cardiovascular logistic regression model"
+                />
+                <figcaption>The ROC curve summarises how well the model ranks risk across thresholds.</figcaption>
+              </figure>
+              <figure class="figure-card">
+                <img
+                  src="../../assets/project-1/model_06_feature_effects.png"
+                  alt="Feature effects chart for the cardiovascular logistic regression model"
+                />
+                <figcaption>Feature effects helped identify which inputs most influenced model performance.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <article class="story-panel story-panel-wide">
+            <h3>Impact And Communication</h3>
+            <p>
+              The checker translates the model output into a simple user-facing webpage. It shows an
+              estimated risk percentage, supporting explanations and visual comparisons, while making
+              clear that it is not medical advice.
+            </p>
+            <figure class="figure-card figure-card-wide">
+              <img
+                src="../../assets/cardiovascular-risk-checker-preview.png"
+                alt="Screenshot of the cardiovascular risk checker webpage"
+              />
+              <figcaption>The checker turns the model output into a practical communication artefact.</figcaption>
+            </figure>
+          </article>
+
+          <article class="story-panel" id="recommendations">
+            <h3>Recommendations</h3>
+            <p>
+              Future work should improve dataset provenance, test calibration, validate performance
+              on external data, add confidence intervals, review accessibility, and involve
+              appropriate clinical governance before any real-world health use.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p><a href="../../index.html#projects">Back to portfolio</a></p>
+    </footer>
+    <script src="../../script.js" defer></script>
+  </body>
+</html>

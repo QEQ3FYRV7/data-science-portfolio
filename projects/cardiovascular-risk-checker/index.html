@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Interactive cardiovascular risk awareness prototype linked to the portfolio data science project."
+    >
+    <title>Cardiovascular Risk Checker | Zuby</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="styles.css">
+    <script src="model_spec.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="checker-shell" aria-labelledby="page-title">
+        <header class="topbar">
+          <div class="brand-block">
+            <div class="brand-mark" aria-hidden="true">CR</div>
+            <div>
+              <p class="eyebrow">Risk awareness prototype</p>
+              <h1 id="page-title">Cardiovascular Risk Checker</h1>
+            </div>
+          </div>
+          <div class="topbar-note">
+            <strong>Prototype only</strong>
+            <span>Not a diagnosis or medical advice</span>
+          </div>
+        </header>
+
+        <section class="hero-grid">
+          <form class="input-panel" id="risk-form">
+            <div class="section-heading">
+              <p class="eyebrow">Health details</p>
+              <h2>Enter your health details</h2>
+            </div>
+
+            <div class="preset-row" aria-label="Example profiles">
+              <button class="action-button subtle" type="button" data-preset="balanced">Lower risk example</button>
+              <button class="action-button subtle" type="button" data-preset="raised-bp">Raised BP example</button>
+              <button class="action-button subtle" type="button" data-preset="reset">Reset</button>
+            </div>
+
+            <div class="input-grid">
+              <label class="field-control">
+                <span>Age</span>
+                <span class="value-readout"><output id="age-output">54</output> years</span>
+                <input id="age" name="age" type="range" min="30" max="65" step="1" value="54">
+              </label>
+
+              <label class="field-control">
+                <span>Height</span>
+                <span class="value-readout"><output id="height-output">165</output> cm</span>
+                <input id="height" name="height" type="range" min="120" max="220" step="1" value="165">
+              </label>
+
+              <label class="field-control">
+                <span>Weight</span>
+                <span class="value-readout"><output id="weight-output">72</output> kg</span>
+                <input id="weight" name="weight" type="range" min="35" max="180" step="1" value="72">
+              </label>
+
+              <label class="field-control">
+                <span>Systolic blood pressure</span>
+                <span class="value-readout"><output id="systolic-output">120</output> mmHg</span>
+                <input id="systolic" name="systolic" type="range" min="80" max="220" step="1" value="120">
+              </label>
+
+              <label class="field-control">
+                <span>Diastolic blood pressure</span>
+                <span class="value-readout"><output id="diastolic-output">80</output> mmHg</span>
+                <input id="diastolic" name="diastolic" type="range" min="45" max="140" step="1" value="80">
+              </label>
+
+              <label class="select-control">
+                <span>Cholesterol</span>
+                <select id="cholesterol" name="cholesterol">
+                  <option value="1" selected>Normal</option>
+                  <option value="2">Above normal</option>
+                  <option value="3">Well above normal</option>
+                </select>
+              </label>
+
+              <label class="select-control">
+                <span>Glucose</span>
+                <select id="glucose" name="glucose">
+                  <option value="1" selected>Normal</option>
+                  <option value="2">Above normal</option>
+                  <option value="3">Well above normal</option>
+                </select>
+              </label>
+            </div>
+
+            <fieldset class="toggle-group">
+              <legend>Lifestyle information</legend>
+              <label>
+                <input id="smoke" name="smoke" type="checkbox">
+                <span>Smoker</span>
+              </label>
+              <label>
+                <input id="alcohol" name="alcohol" type="checkbox">
+                <span>Alcohol intake recorded</span>
+              </label>
+              <label>
+                <input id="active" name="active" type="checkbox" checked>
+                <span>Physically active</span>
+              </label>
+            </fieldset>
+
+            <div class="button-row">
+              <button class="action-button primary" id="calculate-button" type="submit">Check risk estimate</button>
+              <button class="action-button ghost" id="copy-button" type="button">Copy summary</button>
+            </div>
+
+            <p class="form-message" id="form-message" role="status"></p>
+          </form>
+
+          <section class="result-panel" aria-live="polite">
+            <div class="section-heading">
+              <p class="eyebrow">Risk estimate</p>
+              <h2>Your risk estimate</h2>
+            </div>
+
+            <div class="verdict-card" id="verdict-card">
+              <span class="status-pill" id="status-pill">Checking</span>
+              <h3 id="outcome-title">Risk estimate ready</h3>
+              <p id="result-copy"></p>
+            </div>
+
+            <div class="gauge-wrap">
+              <div class="gauge-ring" id="risk-gauge">
+                <div class="gauge-core">
+                  <span id="risk-percent">0%</span>
+                  <small>estimated risk</small>
+                </div>
+              </div>
+              <div class="threshold-card">
+                <span>Review point</span>
+                <strong>35%</strong>
+                <p>At or above this level, the prototype flags the profile for closer review because it prioritises not missing potential risk.</p>
+              </div>
+            </div>
+
+            <dl class="quick-stats">
+              <div>
+                <dt>BMI</dt>
+                <dd id="bmi-value">26.4</dd>
+              </div>
+              <div>
+                <dt>Blood pressure band</dt>
+                <dd id="bp-band-value">120-129 / 80-89</dd>
+              </div>
+              <div>
+                <dt>Pulse pressure</dt>
+                <dd id="pulse-value">40 mmHg</dd>
+              </div>
+            </dl>
+          </section>
+        </section>
+
+        <section class="explore-panel" aria-labelledby="explore-title">
+          <div class="section-heading">
+            <p class="eyebrow">Explore</p>
+            <h2 id="explore-title">Understand your result</h2>
+          </div>
+          <div class="explore-grid">
+            <button class="explore-card" type="button" data-explore="medical">
+              <span>Health range comparison</span>
+              <p>See where your BMI and blood pressure values sit across simple comparison bands.</p>
+            </button>
+            <button class="explore-card" type="button" data-explore="groups">
+              <span>Similar dataset groups</span>
+              <p>Compare your age, BP, BMI, cholesterol, glucose and activity groups with the cleaned project data.</p>
+            </button>
+            <button class="explore-card" type="button" data-explore="signals">
+              <span>Risk signal breakdown</span>
+              <p>See which matched groups are pushing the checker result higher or lower.</p>
+            </button>
+            <button class="explore-card" type="button" data-explore="profile">
+              <span>Risk factor summary</span>
+              <p>Review your entered values as lower-risk, watch, or higher-risk signals.</p>
+            </button>
+          </div>
+        </section>
+
+        <div class="modal-backdrop" id="chart-modal" hidden>
+          <section class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <header class="modal-header">
+              <div>
+                <p class="eyebrow">Explore result</p>
+                <h2 id="modal-title">Health range comparison</h2>
+              </div>
+              <button class="modal-close" id="modal-close" type="button" aria-label="Close result explanation">Close</button>
+            </header>
+
+            <section class="modal-pane" data-pane="medical">
+              <p class="modal-intro">A simple range view showing where the entered values sit. Select a row to see the explanation.</p>
+              <div class="chart-key" aria-label="Health range colour key">
+                <span><i class="key-dot key-green"></i>Lower-risk range</span>
+                <span><i class="key-dot key-amber"></i>Watch range</span>
+                <span><i class="key-dot key-red"></i>Higher-risk range</span>
+                <span><i class="key-marker"></i>Your value</span>
+              </div>
+              <div class="section-heading">
+                <p class="eyebrow">Range view</p>
+                <h2>Your values against comparison bands</h2>
+              </div>
+              <div class="medical-chart" id="medical-chart"></div>
+              <aside class="drill-card" id="medical-detail"></aside>
+            </section>
+
+            <section class="modal-pane" data-pane="groups" hidden>
+              <p class="modal-intro">Choose a factor, then select a bar. The number at the right of each bar is the percentage of records in that group with cardiovascular disease.</p>
+              <div class="chart-key" aria-label="Dataset group comparison key">
+                <span><i class="key-marker"></i>Overall dataset average</span>
+                <span><i class="key-outline"></i>Your current group</span>
+                <span><i class="key-bar"></i>Bar length matches the percentage shown</span>
+              </div>
+              <div class="section-heading">
+                <p class="eyebrow">Group comparison</p>
+                <h2>Similar records in the cleaned dataset</h2>
+              </div>
+              <div class="factor-tabs" id="factor-tabs" aria-label="Choose comparison factor"></div>
+              <div class="group-chart" id="group-chart"></div>
+              <aside class="drill-card" id="group-detail"></aside>
+            </section>
+
+            <section class="modal-pane" data-pane="signals" hidden>
+              <p class="modal-intro">This breakdown compares your matched groups with the overall cleaned dataset average.</p>
+              <div class="chart-key" aria-label="Risk signal breakdown key">
+                <span><i class="key-dot key-red"></i>Higher than average</span>
+                <span><i class="key-dot key-green"></i>Lower than average</span>
+                <span><i class="key-marker"></i>Dataset average line</span>
+              </div>
+              <div class="section-heading">
+                <p class="eyebrow">Signal breakdown</p>
+                <h2>What is pushing the result up or down?</h2>
+              </div>
+              <div class="signal-chart" id="signal-chart"></div>
+              <aside class="drill-card" id="signal-detail"></aside>
+            </section>
+
+            <section class="modal-pane" data-pane="profile" hidden>
+              <p class="modal-intro">This view summarises the entered details into simple risk bands. Select a row to see why it has that status.</p>
+              <div class="chart-key" aria-label="Risk factor summary key">
+                <span><i class="key-dot key-green"></i>Lower-risk signal</span>
+                <span><i class="key-dot key-amber"></i>Watch signal</span>
+                <span><i class="key-dot key-red"></i>Higher-risk signal</span>
+              </div>
+              <div class="section-heading">
+                <p class="eyebrow">Profile summary</p>
+                <h2>Your entered values by risk band</h2>
+              </div>
+              <div class="profile-chart" id="profile-chart"></div>
+              <aside class="drill-card" id="profile-detail"></aside>
+            </section>
+          </section>
+        </div>
+
+        <footer class="checker-footer">
+          <p>This webpage is for portfolio demonstration and learning. It is not medical advice, clinical screening, diagnosis, or treatment guidance.</p>
+          <a href="../../index.html#projects">Back to portfolio</a>
+        </footer>
+      </section>
+    </main>
+  </body>
+</html>
