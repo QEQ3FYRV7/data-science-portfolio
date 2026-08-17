@@ -14,4 +14,5 @@ Place the raw CSV at:
 01_data/raw/cardio_data.csv
 ```
 
-The notebooks create the processed dataset and output tables locally.
+The notebooks create the processed dataset and output tables locally. The `raw` and `processed`
+folders each contain a README explaining what belongs there.

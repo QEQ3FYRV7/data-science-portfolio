@@ -1,6 +1,6 @@
-"""Regenerate selected Project 1 visuals for the portfolio and README.
+"""Create selected Project 1 visuals for the portfolio and README.
 
-This script refreshes the cardiovascular architecture diagram and EDA rate
+This script creates the cardiovascular architecture diagram and EDA rate
 charts. It does not change the model or data; it only updates presentation
 outputs from existing project artefacts.
 """

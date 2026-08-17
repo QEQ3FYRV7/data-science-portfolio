@@ -11,3 +11,5 @@ project_1_cardiovascular_disease/04_outputs/tables/*.csv
 *.docx
 *.pdf
 .ipynb_checkpoints/
+__pycache__/
+*.pyc

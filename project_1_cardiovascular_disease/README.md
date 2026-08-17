@@ -528,7 +528,7 @@ The notebooks create charts and tables in `04_outputs/`.
 Optional helper scripts:
 
 ```bash
-python 03_src/regenerate_project_visuals.py
+python 03_src/create_project_visuals.py
 python 03_src/export_web_model_spec.py
 ```
 
