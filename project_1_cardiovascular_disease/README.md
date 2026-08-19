@@ -146,13 +146,15 @@ The project used a local-first workflow so each stage could be checked before pu
 
 Excel would have been suitable for early inspection, but not for repeatable modelling. Power BI would have been suitable for dashboarding, but not for training the model. Logistic regression in scikit-learn was selected because the task was binary classification and interpretability was important.
 
-## Code Examples
+## Data Engineering and Preparation
 
-The full code is in the notebooks and scripts. These extracts show the main stages of the workflow and what each stage contributes to the project.
+### Step 1: Raw Inspection
 
-### 1. Load and Inspect the Raw Data
+The first notebook is read-only:
 
-The raw Kaggle file uses a semicolon delimiter, so the first notebook loads it explicitly and checks the structure before any cleaning is applied.
+`02_notebooks/01_dataset_read_only_inspection.ipynb`
+
+It checks the dataset before any cleaning or modelling takes place. This creates a clear starting point and avoids making assumptions about the data.
 
 ```python
 raw_path = PROJECT_DIR / "01_data" / "raw" / "cardio_data.csv"
@@ -163,95 +165,7 @@ missing_values = raw_df.isna().sum()
 target_balance = raw_df["cardio"].value_counts(normalize=True)
 ```
 
-This confirms the starting row count, checks for missing values and verifies that the target variable is suitable for binary classification.
-
-### 2. Apply Data Cleaning Rules
-
-Cleaning focuses on removing records with impossible or logically invalid health measurements, while retaining high-risk values that could be genuine.
-
-```python
-quality_flags = pd.DataFrame(index=work_df.index)
-quality_flags["systolic_bp_out_of_range"] = ~work_df["ap_hi"].between(50, 300)
-quality_flags["diastolic_bp_out_of_range"] = ~work_df["ap_lo"].between(30, 200)
-quality_flags["systolic_less_than_diastolic"] = work_df["ap_hi"] < work_df["ap_lo"]
-quality_flags["any_quality_issue"] = quality_flags.any(axis=1)
-
-clean_df = work_df.loc[~quality_flags["any_quality_issue"]].copy()
-```
-
-This makes the cleaning decision repeatable because each removed record is linked to a defined quality rule.
-
-### 3. Create Interpretable Features
-
-The project creates readable health features that can be used for EDA, modelling and the prototype checker.
-
-```python
-clean_df["age_years"] = clean_df["age"] / 365.25
-clean_df["bmi"] = clean_df["weight"] / ((clean_df["height"] / 100) ** 2)
-clean_df["pulse_pressure"] = clean_df["ap_hi"] - clean_df["ap_lo"]
-clean_df["mean_arterial_pressure"] = (
-    clean_df["ap_lo"] + clean_df["pulse_pressure"] / 3
-)
-```
-
-These features translate raw fields into measures that are easier to explain, such as age in years, BMI and blood-pressure patterns.
-
-### 4. Produce EDA Evidence
-
-Grouped EDA tables measure how the recorded cardiovascular disease rate changes across key health categories.
-
-```python
-age_rate_table = (
-    clean_df
-    .groupby("age_band", observed=True)["cardio"]
-    .agg(records="size", cardiovascular_disease_rate="mean")
-    .reset_index()
-)
-```
-
-The same pattern is used for blood pressure, BMI, cholesterol, glucose and activity, so the charts are built from repeatable grouped summaries rather than manual counts.
-
-### 5. Build and Evaluate the Model
-
-The modelling stage uses a scikit-learn pipeline so preprocessing and logistic regression are fitted as one repeatable process.
-
-```python
-preprocessor = ColumnTransformer(
-    transformers=[
-        ("numeric", Pipeline(numeric_steps), numeric_features),
-        ("categorical", make_one_hot_encoder(), categorical_features),
-    ],
-    remainder="drop",
-)
-
-model = Pipeline([
-    ("preprocess", preprocessor),
-    ("model", LogisticRegression(max_iter=4000, solver="lbfgs")),
-])
-```
-
-The selected threshold is then tested with classification metrics.
-
-```python
-probabilities = model.predict_proba(X_test)[:, 1]
-predictions = (probabilities >= selected_threshold).astype(int)
-
-tn, fp, fn, tp = confusion_matrix(y_test, predictions).ravel()
-recall = recall_score(y_test, predictions)
-roc_auc = roc_auc_score(y_test, probabilities)
-```
-
-This links the final model choice to evidence about recall, false negatives and ROC-AUC, which are central to the risk-awareness use case.
-
-## Data Engineering and Preparation
-
-### Step 1: Raw Inspection
-
-The first notebook is read-only:
-
-`02_notebooks/01_dataset_read_only_inspection.ipynb`
-
-It checks the dataset before any cleaning or modelling takes place. This creates a clear starting point and avoids making assumptions about the data.
+This code loads the source file using the correct delimiter, checks the dataset shape, counts missing values and confirms the target balance before any records are changed.
 
 The inspection confirmed:
 
@@ -279,6 +193,20 @@ The cleaning rules removed values that were unsuitable for a cardiovascular pred
 
 This decision was important because high-risk values can be genuine in health data. Removing them automatically could weaken the model and hide the profiles the project is trying to identify.
 
+```python
+work_df = raw_df.copy()
+
+quality_flags = pd.DataFrame(index=work_df.index)
+quality_flags["systolic_bp_out_of_range"] = ~work_df["ap_hi"].between(50, 300)
+quality_flags["diastolic_bp_out_of_range"] = ~work_df["ap_lo"].between(30, 200)
+quality_flags["systolic_less_than_diastolic"] = work_df["ap_hi"] < work_df["ap_lo"]
+quality_flags["any_quality_issue"] = quality_flags.any(axis=1)
+
+clean_df = work_df.loc[~quality_flags["any_quality_issue"]].copy()
+```
+
+This code makes the cleaning repeatable because each removed record is linked to a defined quality rule rather than being removed manually.
+
 Cleaning summary:
 
 | Stage | Records |
@@ -297,6 +225,23 @@ The cleaned target balance remained close to the original:
 ### Step 3: Feature Engineering
 
 The project created interpretable features to support modelling and communication.
+
+```python
+clean_df = clean_df.rename(columns={
+    "age": "age_days",
+    "height": "height_cm",
+    "weight": "weight_kg",
+})
+
+clean_df["age_years"] = clean_df["age_days"] / 365.25
+clean_df["bmi"] = clean_df["weight_kg"] / ((clean_df["height_cm"] / 100) ** 2)
+clean_df["pulse_pressure"] = clean_df["ap_hi"] - clean_df["ap_lo"]
+clean_df["mean_arterial_pressure"] = (
+    clean_df["ap_lo"] + clean_df["pulse_pressure"] / 3
+)
+```
+
+This code turns raw measurements into health indicators that are easier to explain and can be reused consistently in EDA, modelling and the checker.
 
 Key engineered fields:
 
@@ -317,6 +262,17 @@ The `id` field was excluded from modelling because it is an identifier and does 
 ## Data Visualisation and Exploratory Analysis
 
 EDA was used to understand how cardiovascular disease rates changed across key health indicators. The charts below show the clearest patterns used to shape the model and the checker explanation.
+
+```python
+age_rate_table = (
+    clean_df_out
+    .groupby("age_band", observed=True)["cardio"]
+    .agg(records="size", cardiovascular_disease_rate="mean")
+    .reset_index()
+)
+```
+
+This code calculates the disease rate within each age band. The same grouped-rate approach was used for blood pressure, BMI, cholesterol, glucose and activity so the charts came from repeatable summaries rather than manual counting.
 
 ### Age
 
@@ -378,6 +334,23 @@ The analytical task was binary classification.
 | Selected model | Clinical-style bands with routine indicators |
 | Selected threshold | 0.35 |
 
+```python
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("numeric", Pipeline(numeric_steps), numeric_features),
+        ("categorical", make_one_hot_encoder(), categorical_features),
+    ],
+    remainder="drop",
+)
+
+model = Pipeline([
+    ("preprocess", preprocessor),
+    ("model", LogisticRegression(max_iter=4000, solver="lbfgs")),
+])
+```
+
+This code keeps preprocessing and logistic regression in one repeatable pipeline, which reduces the risk of applying different transformations during training and testing.
+
 ### Why Logistic Regression Was Used
 
 Logistic regression was selected because:
@@ -424,6 +397,17 @@ A threshold is the point where the model changes from predicting `no cardiovascu
 The project selected `0.35` because recall was prioritised for the risk-awareness use case. A false negative means the model predicts no cardiovascular disease when cardiovascular disease is present. A false positive means the model predicts cardiovascular disease when it is not present.
 
 The false negative is the more serious error because it misses a likely positive record. The model accepts more false positives so it can identify more positive cases.
+
+```python
+probabilities = model.predict_proba(X_test)[:, 1]
+predictions = (probabilities >= selected_threshold).astype(int)
+
+tn, fp, fn, tp = confusion_matrix(y_test, predictions).ravel()
+recall = recall_score(y_test, predictions)
+roc_auc = roc_auc_score(y_test, probabilities)
+```
+
+This code applies the selected threshold and calculates the evidence used to judge model performance, including false negatives, recall and ROC-AUC.
 
 ## Results
 
