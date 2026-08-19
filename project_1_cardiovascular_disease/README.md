@@ -148,27 +148,72 @@ Excel would have been suitable for early inspection, but not for repeatable mode
 
 ## Code Examples
 
-The full code is in the notebooks and scripts. These short examples show the main technical steps.
+The full code is in the notebooks and scripts. These extracts show the main stages of the workflow and what each stage contributes to the project.
 
-Load the cleaned modelling dataset and check that the expected fields are present:
+### 1. Load and Inspect the Raw Data
 
-```python
-cardio_df = pd.read_csv(CLEANED_DATA_PATH)
-
-missing_columns = sorted(set(required_columns) - set(cardio_df.columns))
-if missing_columns:
-    raise ValueError(f"Missing required modelling columns: {missing_columns}")
-```
-
-Create interpretable health features for analysis and modelling:
+The raw Kaggle file uses a semicolon delimiter, so the first notebook loads it explicitly and checks the structure before any cleaning is applied.
 
 ```python
-df["age_years"] = df["age"] / 365.25
-df["bmi"] = df["weight"] / ((df["height"] / 100) ** 2)
-df["pulse_pressure"] = df["ap_hi"] - df["ap_lo"]
+raw_path = PROJECT_DIR / "01_data" / "raw" / "cardio_data.csv"
+raw_df = pd.read_csv(raw_path, sep=";")
+
+raw_shape = raw_df.shape
+missing_values = raw_df.isna().sum()
+target_balance = raw_df["cardio"].value_counts(normalize=True)
 ```
 
-Build the logistic regression pipeline with preprocessing:
+This confirms the starting row count, checks for missing values and verifies that the target variable is suitable for binary classification.
+
+### 2. Apply Data Cleaning Rules
+
+Cleaning focuses on removing records with impossible or logically invalid health measurements, while retaining high-risk values that could be genuine.
+
+```python
+quality_flags = pd.DataFrame(index=work_df.index)
+quality_flags["systolic_bp_out_of_range"] = ~work_df["ap_hi"].between(50, 300)
+quality_flags["diastolic_bp_out_of_range"] = ~work_df["ap_lo"].between(30, 200)
+quality_flags["systolic_less_than_diastolic"] = work_df["ap_hi"] < work_df["ap_lo"]
+quality_flags["any_quality_issue"] = quality_flags.any(axis=1)
+
+clean_df = work_df.loc[~quality_flags["any_quality_issue"]].copy()
+```
+
+This makes the cleaning decision repeatable because each removed record is linked to a defined quality rule.
+
+### 3. Create Interpretable Features
+
+The project creates readable health features that can be used for EDA, modelling and the prototype checker.
+
+```python
+clean_df["age_years"] = clean_df["age"] / 365.25
+clean_df["bmi"] = clean_df["weight"] / ((clean_df["height"] / 100) ** 2)
+clean_df["pulse_pressure"] = clean_df["ap_hi"] - clean_df["ap_lo"]
+clean_df["mean_arterial_pressure"] = (
+    clean_df["ap_lo"] + clean_df["pulse_pressure"] / 3
+)
+```
+
+These features translate raw fields into measures that are easier to explain, such as age in years, BMI and blood-pressure patterns.
+
+### 4. Produce EDA Evidence
+
+Grouped EDA tables measure how the recorded cardiovascular disease rate changes across key health categories.
+
+```python
+age_rate_table = (
+    clean_df
+    .groupby("age_band", observed=True)["cardio"]
+    .agg(records="size", cardiovascular_disease_rate="mean")
+    .reset_index()
+)
+```
+
+The same pattern is used for blood pressure, BMI, cholesterol, glucose and activity, so the charts are built from repeatable grouped summaries rather than manual counts.
+
+### 5. Build and Evaluate the Model
+
+The modelling stage uses a scikit-learn pipeline so preprocessing and logistic regression are fitted as one repeatable process.
 
 ```python
 preprocessor = ColumnTransformer(
@@ -184,6 +229,19 @@ model = Pipeline([
     ("model", LogisticRegression(max_iter=4000, solver="lbfgs")),
 ])
 ```
+
+The selected threshold is then tested with classification metrics.
+
+```python
+probabilities = model.predict_proba(X_test)[:, 1]
+predictions = (probabilities >= selected_threshold).astype(int)
+
+tn, fp, fn, tp = confusion_matrix(y_test, predictions).ravel()
+recall = recall_score(y_test, predictions)
+roc_auc = roc_auc_score(y_test, probabilities)
+```
+
+This links the final model choice to evidence about recall, false negatives and ROC-AUC, which are central to the risk-awareness use case.
 
 ## Data Engineering and Preparation
 
