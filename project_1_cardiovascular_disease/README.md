@@ -545,9 +545,14 @@ Open `05_app/index.html` to view the local checker. It is a static HTML, CSS and
 
 ## Key Sources
 
-1. Dataset: Sulianova, A. (2019) *Cardiovascular Disease Dataset*, Kaggle. <https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset>
-2. Cardiovascular risk context: NHS (2026) *Cardiovascular disease*. <https://www.nhs.uk/conditions/cardiovascular-disease/>
-3. Risk model context: D'Agostino et al. (2008), Hippisley-Cox et al. (2017) and SCORE2 Working Group (2021).
-4. Logistic regression method: Hosmer, Lemeshow and Sturdivant (2013), *Applied Logistic Regression*.
-5. Python modelling library: Pedregosa et al. (2011), *Scikit-learn: Machine Learning in Python*, and scikit-learn documentation.
-6. Responsible data use: Information Commissioner's Office guidance on data protection principles and AI.
+Dataset: Sulianova, A. (2019) *Cardiovascular Disease Dataset*, Kaggle. <https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset>
+
+Cardiovascular risk context: NHS (2026) *Cardiovascular disease*. <https://www.nhs.uk/conditions/cardiovascular-disease/>
+
+Risk model context: D'Agostino et al. (2008), Hippisley-Cox et al. (2017) and SCORE2 Working Group (2021).
+
+Logistic regression method: Hosmer, Lemeshow and Sturdivant (2013), *Applied Logistic Regression*.
+
+Python modelling library: Pedregosa et al. (2011), *Scikit-learn: Machine Learning in Python*, and scikit-learn documentation.
+
+Responsible data use: Information Commissioner's Office guidance on data protection principles and AI.
