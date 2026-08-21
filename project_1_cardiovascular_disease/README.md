@@ -24,12 +24,12 @@ Cardiovascular disease is linked with routine health indicators such as age, blo
 
 The practical purpose is to demonstrate a full data science workflow:
 
-- prepare a public dataset for modelling
-- explore health indicators using EDA
-- build an interpretable binary classification model
-- evaluate the model using suitable classification metrics
-- explain false positives and false negatives
-- communicate the result responsibly through a prototype checker
+1. Prepare a public dataset for modelling.
+2. Explore health indicators using EDA.
+3. Build an interpretable binary classification model.
+4. Evaluate the model using suitable classification metrics.
+5. Explain false positives and false negatives.
+6. Communicate the result responsibly through a prototype checker.
 
 The use case is non-diagnostic risk awareness. Recall is important because a false negative means a record with cardiovascular disease is not flagged by the model. A false positive is still a limitation, but it is less serious for an awareness prototype than missing a likely positive record.
 
@@ -90,46 +90,13 @@ The project follows a local-first workflow. Each stage creates outputs that can 
 
 The workflow was:
 
-1. **Inspect the raw dataset**
-   - Loaded the raw Kaggle CSV.
-   - Confirmed the delimiter.
-   - Checked row count, column count, data types and target distribution.
-   - Identified fields that needed conversion or quality checks.
-
-2. **Check data quality**
-   - Checked missing values.
-   - Checked duplicate records.
-   - Reviewed impossible or implausible health measurements.
-   - Confirmed that the binary target was close to balanced.
-
-3. **Clean and prepare the data**
-   - Removed records with serious measurement-quality issues.
-   - Kept medically possible high-risk records.
-   - Converted age from days to years.
-   - Created BMI and blood-pressure features.
-   - Saved the cleaned dataset separately from the raw source.
-
-4. **Explore the cleaned data**
-   - Compared cardiovascular disease rates across age bands.
-   - Compared rates across blood-pressure categories.
-   - Compared rates across BMI, cholesterol, glucose and activity groups.
-   - Used the strongest EDA patterns to shape the modelling and explanation.
-
-5. **Build logistic regression models**
-   - Split the data into training, validation and test sets.
-   - Compared logistic regression feature sets.
-   - Selected the model using validation evidence.
-   - Evaluated final performance once on the held-out test set.
-
-6. **Interpret model performance**
-   - Reported accuracy, precision, recall, F1 score, confusion matrix and ROC-AUC.
-   - Identified the most serious misclassification error.
-   - Explained why recall was prioritised for the awareness use case.
-
-7. **Create a prototype output**
-   - Exported the selected model specification.
-   - Built a local static checker using HTML, CSS and JavaScript.
-   - Translated the model result into plain English and simple visuals.
+1. **Inspect the raw dataset.** The raw Kaggle CSV was loaded, the delimiter was confirmed and the row count, column count, data types and target distribution were checked.
+2. **Check data quality.** The notebooks checked missing values, duplicates, impossible measurements and target balance.
+3. **Clean and prepare the data.** Serious measurement-quality issues were removed, medically possible high-risk records were kept, and age, BMI and blood-pressure features were created.
+4. **Explore the cleaned data.** Cardiovascular disease rates were compared across age, blood pressure, BMI, cholesterol, glucose and activity groups.
+5. **Build logistic regression models.** The data was split into training, validation and test sets, then candidate feature sets were compared using the same algorithm.
+6. **Interpret model performance.** Accuracy, precision, recall, F1 score, confusion matrix and ROC-AUC were used to explain performance and the main error trade-off.
+7. **Create a prototype output.** The selected model specification was exported into a local static checker built with HTML, CSS and JavaScript.
 
 ## Data Infrastructure and Tools
 
@@ -169,12 +136,12 @@ This code loads the source file using the correct delimiter, checks the dataset 
 
 The inspection confirmed:
 
-- the raw dataset has 70,000 records
-- the file uses a semicolon delimiter
-- the target variable is binary
-- the target is close to balanced
-- there are no missing values in the raw fields
-- some measurement values need cleaning before modelling
+1. The raw dataset has 70,000 records.
+2. The file uses a semicolon delimiter.
+3. The target variable is binary.
+4. The target is close to balanced.
+5. There are no missing values in the raw fields.
+6. Some measurement values need cleaning before modelling.
 
 The target balance before cleaning was:
 
@@ -310,11 +277,11 @@ This supported the decision to include cholesterol as a routine health indicator
 
 The strongest EDA signals were:
 
-- age band
-- systolic blood pressure category
-- cholesterol category
-- diastolic blood pressure category
-- BMI
+1. Age band.
+2. Systolic blood pressure category.
+3. Cholesterol category.
+4. Diastolic blood pressure category.
+5. BMI.
 
 The EDA showed predictive patterns in the dataset. It did not prove that any single indicator causes cardiovascular disease.
 
@@ -355,11 +322,11 @@ This code keeps preprocessing and logistic regression in one repeatable pipeline
 
 Logistic regression was selected because:
 
-- the target is binary
-- the output can be interpreted as a probability
-- probability thresholds can be adjusted
-- the method is easier to explain than many complex models
-- it provides a transparent classification baseline
+1. The target is binary.
+2. The output can be interpreted as a probability.
+3. Probability thresholds can be adjusted.
+4. The method is easier to explain than many complex models.
+5. It provides a transparent classification baseline.
 
 A simpler, interpretable model was selected because the result needed to be understandable as well as useful.
 
@@ -472,13 +439,13 @@ The local checker is stored in:
 
 The checker allows a user to enter routine health details and view:
 
-- estimated risk percentage
-- risk flag
-- BMI
-- blood pressure band
-- pulse pressure
-- plain-English explanation
-- simple visual comparisons
+1. Estimated risk percentage.
+2. Risk flag.
+3. BMI.
+4. Blood pressure band.
+5. Pulse pressure.
+6. Plain-English explanation.
+7. Simple visual comparisons.
 
 The checker does not show technical model metrics in the user interface. Metrics such as precision, recall, confusion matrix and ROC-AUC remain in the modelling evidence, where they can be interpreted properly.
 
@@ -503,16 +470,16 @@ The model should be interpreted carefully.
 
 Key limitations:
 
-- The dataset supports prediction and association, not causation.
-- The dataset source does not confirm population origin strongly enough for UK clinical generalisation.
-- The dataset licence was listed as unknown, so reuse must be handled cautiously.
-- The model is not clinically validated.
-- The model should not be used for diagnosis, treatment, clinical screening decisions or healthcare prioritisation.
-- Logistic regression assumes a suitable relationship between inputs and the log-odds of the outcome.
-- Some health indicators are correlated, especially blood-pressure and weight-related variables.
-- Gender coding was not translated into male/female labels because the mapping was not confirmed in the project notes.
-- Smoking and alcohol required cautious interpretation because fitted relationships in the dataset were not clinically intuitive.
-- Users may focus on the percentage and ignore the caveat.
+1. The dataset supports prediction and association, not causation.
+2. The dataset source does not confirm population origin strongly enough for UK clinical generalisation.
+3. The dataset licence was listed as unknown, so reuse must be handled cautiously.
+4. The model is not clinically validated.
+5. The model should not be used for diagnosis, treatment, clinical screening decisions or healthcare prioritisation.
+6. Logistic regression assumes a suitable relationship between inputs and the log-odds of the outcome.
+7. Some health indicators are correlated, especially blood-pressure and weight-related variables.
+8. Gender coding was not translated into male or female labels because the mapping was not confirmed in the project notes.
+9. Smoking and alcohol required cautious interpretation because fitted relationships in the dataset were not clinically intuitive.
+10. Users may focus on the percentage and ignore the caveat.
 
 The main limitation is that the model may work within this dataset but fail to generalise to real clinical populations.
 
@@ -522,21 +489,21 @@ The project uses public data, but the topic is health-related. Responsible handl
 
 Governance decisions made in the project:
 
-- the raw dataset was kept unchanged
-- processed outputs were stored separately
-- cleaning decisions were documented in notebooks
-- the identifier field was excluded from modelling
-- outputs avoid individual-level record display
-- the checker includes non-diagnostic wording
-- the model is described as a prototype, not a medical product
+1. The raw dataset was kept unchanged.
+2. Processed outputs were stored separately.
+3. Cleaning decisions were documented in notebooks.
+4. The identifier field was excluded from modelling.
+5. Outputs avoid individual-level record display.
+6. The checker includes non-diagnostic wording.
+7. The model is described as a prototype, not a medical product.
 
 Ethical considerations:
 
-- users may overtrust a probability percentage
-- the dataset may contain bias from its original collection context
-- the model may not generalise to different populations
-- false negatives are more serious than false positives for risk awareness
-- a real system would require clinical governance, privacy controls, accessibility testing and monitoring
+1. Users may overtrust a probability percentage.
+2. The dataset may contain bias from its original collection context.
+3. The model may not generalise to different populations.
+4. False negatives are more serious than false positives for risk awareness.
+5. A real system would require clinical governance, privacy controls, accessibility testing and monitoring.
 
 Responsible use statement:
 
@@ -567,7 +534,7 @@ Run the notebooks in order:
 
 The notebooks create charts and tables in `04_outputs/`.
 
-Optional helper scripts:
+The optional helper scripts below recreate project visuals and export the web model specification.
 
 ```bash
 python 03_src/create_project_visuals.py
@@ -578,9 +545,9 @@ Open `05_app/index.html` to view the local checker. It is a static HTML, CSS and
 
 ## Key Sources
 
-- Dataset: Sulianova, A. (2019) *Cardiovascular Disease Dataset*, Kaggle. <https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset>
-- Cardiovascular risk context: NHS (2026) *Cardiovascular disease*. <https://www.nhs.uk/conditions/cardiovascular-disease/>
-- Risk model context: D'Agostino et al. (2008), Hippisley-Cox et al. (2017) and SCORE2 Working Group (2021).
-- Logistic regression method: Hosmer, Lemeshow and Sturdivant (2013), *Applied Logistic Regression*.
-- Python modelling library: Pedregosa et al. (2011), *Scikit-learn: Machine Learning in Python*, and scikit-learn documentation.
-- Responsible data use: Information Commissioner's Office guidance on data protection principles and AI.
+1. Dataset: Sulianova, A. (2019) *Cardiovascular Disease Dataset*, Kaggle. <https://www.kaggle.com/datasets/sulianova/cardiovascular-disease-dataset>
+2. Cardiovascular risk context: NHS (2026) *Cardiovascular disease*. <https://www.nhs.uk/conditions/cardiovascular-disease/>
+3. Risk model context: D'Agostino et al. (2008), Hippisley-Cox et al. (2017) and SCORE2 Working Group (2021).
+4. Logistic regression method: Hosmer, Lemeshow and Sturdivant (2013), *Applied Logistic Regression*.
+5. Python modelling library: Pedregosa et al. (2011), *Scikit-learn: Machine Learning in Python*, and scikit-learn documentation.
+6. Responsible data use: Information Commissioner's Office guidance on data protection principles and AI.
