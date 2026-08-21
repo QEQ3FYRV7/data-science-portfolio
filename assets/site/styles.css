@@ -20,7 +20,7 @@
   --shadow-hover: 0 34px 90px rgba(0, 0, 0, 0.42);
   --radius: 8px;
   --max-width: 1160px;
-  --hero-image: url("assets/data-science-hero.png");
+  --hero-image: url("../data-science-hero.png");
 }
 
 * {

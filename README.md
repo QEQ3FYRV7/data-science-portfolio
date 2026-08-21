@@ -12,7 +12,7 @@ and communication only. It is not a medical or diagnostic tool.
 | Path | Purpose |
 | --- | --- |
 | `index.html` | Portfolio homepage |
-| `styles.css` and `script.js` | Shared portfolio styling and behaviour |
+| `assets/site/` | Shared portfolio styling and behaviour |
 | `assets/` | Images and project visuals used by the website |
 | `projects/cardiovascular-disease-prediction/` | Public project page |
 | `projects/cardiovascular-risk-checker/` | Published checker prototype |
